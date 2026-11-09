@@ -6,20 +6,40 @@ public class Bullet : MonoBehaviour
     [SerializeField] private float lifeTime = 3f;
 
     public float Damage { get; set; }
+    public SimplePool<Bullet> Pool { get; set; }
 
-    private void Start()
+    private float spawnTime;
+
+    private void OnEnable()
     {
-        Destroy(gameObject, lifeTime);
+        spawnTime = Time.time;
     }
 
     private void Update()
     {
         transform.position += transform.forward * speed * Time.deltaTime;
+
+        if (Time.time - spawnTime >= lifeTime)
+        {
+            Despawn();
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player")) return;
-        Destroy(gameObject);
+
+        if (other.TryGetComponent(out IDamageable target))
+        {
+            target.TakeDamage(Damage);
+        }
+
+        Despawn();
+    }
+
+    private void Despawn()
+    {
+        if (Pool != null) Pool.Release(this);
+        else Destroy(gameObject);
     }
 }

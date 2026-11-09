@@ -10,16 +10,6 @@ public class PlayerAimer : MonoBehaviour
     
     public Vector3 _aimPoint {get; private set;}
 
-    private void OnEnable()
-    {
-        _aimAction.action.Enable();
-    }
-    
-    private void OnDisable()
-    {
-        _aimAction.action.Disable();
-    }
-
     private void Update()
     {
         Vector2 _screenPoint = _aimAction.action.ReadValue<Vector2>();

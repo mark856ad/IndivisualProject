@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7f923307b03b0a44807a7f52703a71b, type: 3}
+  m_Name: Grunt
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  enemyName: Grunt
+  maxHealth: 30
+  moveSpeed: 3.5
+  attackRange: 1.5
+  detectRange: 10
+  loseRange: 15
+  wanderRadius: 5
+  wanderWaitTime: 2
+  attackDamage: 10
+  attackInterval: 1

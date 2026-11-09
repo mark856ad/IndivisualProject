@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Shotgun : Weapon
+public class Shotgun : Weapon   
 {
     protected override void Fire()
     {
@@ -14,8 +14,7 @@ public class Shotgun : Weapon
             float angle = count > 1 ? startAngle + step * i : 0f;
             Quaternion rotation = muzzle.rotation * Quaternion.Euler(0f, angle, 0f);
 
-            Bullet bullet = Instantiate(bulletPrefab, muzzle.position, rotation);
-            bullet.Damage = data.damage;
+            SpawnBullet(rotation);
         }
     }
 }

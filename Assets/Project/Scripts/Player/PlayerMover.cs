@@ -15,16 +15,6 @@ public class PlayerMover : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
     }
 
-    private void OnEnable()
-    {
-        _moveAction.action.Enable();
-    }
-
-    private void OnDisable()
-    {
-        _moveAction.action.Disable();
-    }
-
     private void Update()
     {
         _moveInput = _moveAction.action.ReadValue<Vector2>();

@@ -14,23 +14,18 @@ public abstract class Weapon : MonoBehaviour
     private int currentAmmo;
     private int reserveMagazines;
     private bool isReloading;
+    protected SimplePool<Bullet> bulletPool;
 
     private void Awake()
     {
         currentAmmo = data.magazineSize;
         reserveMagazines = data.reserveMagazines;
+        bulletPool = new SimplePool<Bullet>(bulletPrefab, 20, $"{data.weaponName} BulletPool");
     }
-
-    private void OnEnable()
-    {
-        fireAction.action.Enable();
-        reloadAction.action.Enable();
-    }
-
     private void OnDisable()
     {
-        fireAction.action.Disable();
-        reloadAction.action.Disable();
+s        Debug.Log($"[장착] {data.weaponName}  탄 {currentAmmo}/{data.magazineSize}, 예비 {reserveMagazines}");
+        isReloading = false;   // 재장전 취소 (코루틴은 꺼질 때 자동 중단)
     }
 
     private void Update()
@@ -56,8 +51,9 @@ public abstract class Weapon : MonoBehaviour
         currentAmmo--;
 
         Fire();
+
+        Debug.Log($"탄: {currentAmmo}/{data.magazineSize}, 예비: {reserveMagazines}");
     }
-    protected abstract void Fire();
 
     private void TryReload()
     {
@@ -80,5 +76,14 @@ public abstract class Weapon : MonoBehaviour
         isReloading = false;
 
         Debug.Log($"재장전 완료. 예비: {reserveMagazines}");
+    }
+
+    protected abstract void Fire();
+    protected Bullet SpawnBullet(Quaternion rotation)
+    {
+        Bullet bullet = bulletPool.Get(muzzle.position, rotation);
+        bullet.Pool = bulletPool;
+        bullet.Damage = data.damage;
+        return bullet;
     }
 }
