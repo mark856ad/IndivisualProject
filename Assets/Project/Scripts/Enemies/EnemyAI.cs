@@ -10,7 +10,9 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] private float repathInterval = 0.2f;
     [SerializeField] private float exitRangeMultiplier = 1.2f;
     [SerializeField] private float wanderSpeedRatio = 0.5f;
-
+    [SerializeField] private LayerMask obstacleMask;
+    private float lastSeenTime;
+    private Vector3 lastKnownPosition;
     private NavMeshAgent agent;
     private Transform target;
     private State state;
@@ -47,7 +49,7 @@ public class EnemyAI : MonoBehaviour
         switch (state)
         {
             case State.Wander:
-                UpdateWander(sqrDistance);
+                UpdateWander(sqrDistance, toTarget);
                 break;
             case State.Chase:
                 UpdateChase(sqrDistance);
@@ -58,9 +60,9 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-    private void UpdateWander(float sqrDistance)
+    private void UpdateWander(float sqrDistance, Vector3 toTarget)
     {
-        if (sqrDistance <= data.detectRange * data.detectRange)
+        if (sqrDistance <= data.detectRange * data.detectRange && CanSee(toTarget))
         {
             ChangeState(State.Chase);
             return;
@@ -108,7 +110,21 @@ public class EnemyAI : MonoBehaviour
             return;
         }
 
-        if (sqrDistance <= data.attackRange * data.attackRange)
+        bool seen = HasLineOfSight();
+
+        if (seen)
+        {
+            lastSeenTime = Time.time;
+            lastKnownPosition = target.position;
+        }
+        else if (Time.time - lastSeenTime >= data.loseSightTime)
+        {
+            Debug.Log($"{data.enemyName}: 플레이어를 놓쳐 추격 포기");
+            ChangeState(State.Wander);
+            return;
+        }
+
+        if (seen && sqrDistance <= data.attackRange * data.attackRange)
         {
             ChangeState(State.Attack);
             return;
@@ -116,14 +132,14 @@ public class EnemyAI : MonoBehaviour
 
         if (Time.time - lastRepathTime < repathInterval) return;
         lastRepathTime = Time.time;
-        agent.SetDestination(target.position);
+        agent.SetDestination(lastKnownPosition);
     }
 
     private void UpdateAttack(float sqrDistance, Vector3 toTarget)
     {
         float exitRange = data.attackRange * exitRangeMultiplier;
 
-        if (sqrDistance > exitRange * exitRange)
+        if (sqrDistance > exitRange * exitRange || !HasLineOfSight())
         {
             ChangeState(State.Chase);
             return;
@@ -132,6 +148,10 @@ public class EnemyAI : MonoBehaviour
         if (toTarget.sqrMagnitude > 0.001f)
         {
             transform.rotation = Quaternion.LookRotation(toTarget);
+        }
+        if (data.keepDistance)
+        {
+            KeepDistance(sqrDistance, toTarget);
         }
         if (Time.time - lastAttackTime >= data.attackInterval)
         {
@@ -147,6 +167,11 @@ public class EnemyAI : MonoBehaviour
     private void ChangeState(State next)
     {
         state = next;
+        if (state == State.Chase)
+        {
+            lastSeenTime = Time.time;
+            lastKnownPosition = target.position;
+        }
         Debug.Log($"{data.enemyName} 상태: {state}");
 
         agent.isStopped = (state == State.Attack);
@@ -157,5 +182,56 @@ public class EnemyAI : MonoBehaviour
             isWaiting = false;
             PickWanderPoint();
         }
+    }
+    private void KeepDistance(float sqrDistance, Vector3 toTarget)
+    {
+        bool tooClose = sqrDistance < data.preferredRange * data.preferredRange;
+        agent.isStopped = !tooClose;
+
+        if (!tooClose) return;
+        if (Time.time - lastRepathTime < repathInterval) return;
+        lastRepathTime = Time.time;
+
+        Vector3 away = -toTarget.normalized;
+        Vector3 candidate = transform.position + away * data.retreatStep;
+
+        if (NavMesh.SamplePosition(candidate, out NavMeshHit hit, 2f, NavMesh.AllAreas))
+        {
+            float currentSqr = (transform.position - target.position).sqrMagnitude;
+            float newSqr = (hit.position - target.position).sqrMagnitude;
+
+            if (newSqr > currentSqr + 1f)
+            {
+                agent.SetDestination(hit.position);
+                return;
+            }
+        }
+
+        agent.ResetPath();
+    }
+    private bool HasLineOfSight()
+    {
+        Vector3 eye = transform.position + Vector3.up * 1f;
+        Vector3 targetPoint = target.position + Vector3.up * 1f;
+
+        return !Physics.Linecast(eye, targetPoint, obstacleMask);
+    }
+    private bool CanSee(Vector3 toTarget)
+    {
+        if (Vector3.Angle(transform.forward, toTarget) > data.viewAngle * 0.5f) return false;
+
+        return HasLineOfSight();
+    }
+    private void OnDrawGizmosSelected()
+    {
+        if (data == null) return;
+
+        float half = data.viewAngle * 0.5f;
+        Vector3 left = Quaternion.Euler(0f, -half, 0f) * transform.forward * data.detectRange;
+        Vector3 right = Quaternion.Euler(0f, half, 0f) * transform.forward * data.detectRange;
+
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawLine(transform.position, transform.position + left);
+        Gizmos.DrawLine(transform.position, transform.position + right);
     }
 }

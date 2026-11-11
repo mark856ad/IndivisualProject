@@ -22,3 +22,8 @@ MonoBehaviour:
   wanderWaitTime: 2
   attackDamage: 10
   attackInterval: 1
+  keepDistance: 0
+  preferredRange: 8
+  retreatStep: 4
+  viewAngle: 90
+  loseSightTime: 3

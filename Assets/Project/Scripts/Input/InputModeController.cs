@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public enum InputMode { Normal, Stratagem }
+public enum InputMode { Normal, Stratagem, Throw }
 
 public class InputModeController : MonoBehaviour
 {
@@ -14,30 +14,34 @@ public class InputModeController : MonoBehaviour
 
     private InputActionMap playerMap;
     private InputActionMap combatMap;
-    private InputActionMap stratagemMode;
+    private InputActionMap stratagemMap;
+    private InputActionMap throwMap;
 
     private void Awake()
     {
+        if (controls == null || menuAction == null)
+        {
+            Debug.LogError("Controls 또는 Menu Action 칸이 비어 있습니다.", this);
+            enabled = false;
+            return;
+        }
+
         playerMap = FindMap("Player");
         combatMap = FindMap("Combat");
-        stratagemMode = FindMap("Stratagem");
-    }
+        stratagemMap = FindMap("Stratagem");
+        throwMap = FindMap("Throw");
 
-    private InputActionMap FindMap(string mapName)
-    {
-        InputActionMap map = controls.FindActionMap(mapName);
-        if (map == null)
+        if (playerMap == null || combatMap == null || stratagemMap == null || throwMap == null)
         {
-            Debug.LogError($"Action Map '{mapName}'을 찾지 못했습니다. 에셋의 맵 이름을 확인하세요.", this);
+            enabled = false;
         }
-        return map;
     }
 
     private void OnEnable()
     {
+        Mode = InputMode.Normal;
         playerMap.Enable();
-        combatMap.Enable();
-        stratagemMode.Disable();
+        ApplyMaps(Mode);
 
         menuAction.action.started += OnMenuPressed;
         menuAction.action.canceled += OnMenuReleased;
@@ -45,39 +49,61 @@ public class InputModeController : MonoBehaviour
 
     private void OnDisable()
     {
-        menuAction.action.started -= OnMenuPressed;
-        menuAction.action.canceled -= OnMenuReleased;
+        if (menuAction != null)
+        {
+            menuAction.action.started -= OnMenuPressed;
+            menuAction.action.canceled -= OnMenuReleased;
+        }
 
-        playerMap.Disable();
-        combatMap.Disable();
-        stratagemMode.Disable();
+        playerMap?.Disable();
+        combatMap?.Disable();
+        stratagemMap?.Disable();
+        throwMap?.Disable();
     }
 
     private void OnMenuPressed(InputAction.CallbackContext context)
     {
+        if (Mode != InputMode.Normal) return;
         SetMode(InputMode.Stratagem);
     }
 
     private void OnMenuReleased(InputAction.CallbackContext context)
     {
+        if (Mode != InputMode.Stratagem) return;
         SetMode(InputMode.Normal);
     }
 
-    private void SetMode(InputMode next)
+    public void SetMode(InputMode next)
     {
         if (Mode == next) return;
+
         Mode = next;
-
-        combatMap.Enable();
-        stratagemMode.Disable();
-
-        if (next == InputMode.Stratagem)
-        {
-            combatMap.Disable();
-            stratagemMode.Enable();
-        }
+        ApplyMaps(next);
 
         Debug.Log($"입력 모드: {Mode}");
         ModeChanged?.Invoke(Mode);
+    }
+
+    private void ApplyMaps(InputMode mode)
+    {
+        SetEnabled(combatMap, mode == InputMode.Normal);
+        SetEnabled(stratagemMap, mode == InputMode.Stratagem);
+        SetEnabled(throwMap, mode == InputMode.Throw);
+    }
+
+    private static void SetEnabled(InputActionMap map, bool on)
+    {
+        if (on) map.Enable();
+        else map.Disable();
+    }
+
+    private InputActionMap FindMap(string mapName)
+    {
+        InputActionMap map = controls.FindActionMap(mapName);
+        if (map == null)
+        {
+            Debug.LogError($"Action Map '{mapName}'을 찾지 못했습니다. 현재 Controls 에셋: {controls.name}", this);
+        }
+        return map;
     }
 }

@@ -14,17 +14,41 @@ public abstract class Weapon : MonoBehaviour
     private int currentAmmo;
     private int reserveMagazines;
     private bool isReloading;
+    private bool ammoInitialized;
+    private float reloadStartTime;
     protected SimplePool<Bullet> bulletPool;
+    
+    public event System.Action<Weapon> AmmoChanged;
+    
+    public string WeaponName => data.weaponName;
+    public int CurrentAmmo => currentAmmo;
+    public int MagazineSize => data.magazineSize;
+    public int ReserveMagazines => reserveMagazines;
+    public bool InfiniteReserve => data.infiniteReserve;
+    public bool IsReloading => isReloading;
+    public float ReloadTime => data.reloadTime;
+    public float ReloadProgress =>
+        isReloading ? Mathf.Clamp01((Time.time - reloadStartTime) / data.reloadTime) : 0f;
+
+    private void NotifyAmmo()
+    {
+        Debug.Log($"[AmmoChanged] {WeaponName} {currentAmmo}/{MagazineSize}, 예비 {reserveMagazines}, 재장전 {isReloading}");
+        AmmoChanged?.Invoke(this);
+    }
 
     private void Awake()
     {
-        currentAmmo = data.magazineSize;
-        reserveMagazines = data.reserveMagazines;
+        InitAmmo();
         bulletPool = new SimplePool<Bullet>(bulletPrefab, 20, $"{data.weaponName} BulletPool");
+    }
+    private void OnEnable()
+    {
+        InitAmmo();
+        NotifyAmmo();
     }
     private void OnDisable()
     {
-s        Debug.Log($"[장착] {data.weaponName}  탄 {currentAmmo}/{data.magazineSize}, 예비 {reserveMagazines}");
+        Debug.Log($"[장착] {data.weaponName}  탄 {currentAmmo}/{data.magazineSize}, 예비 {reserveMagazines}");
         isReloading = false;   // 재장전 취소 (코루틴은 꺼질 때 자동 중단)
     }
 
@@ -40,6 +64,34 @@ s        Debug.Log($"[장착] {data.weaponName}  탄 {currentAmmo}/{data.magazin
             TryFire();
         }
     }
+    private void InitAmmo()
+    {
+        if (ammoInitialized) return;
+        ammoInitialized = true;
+
+        currentAmmo = data.magazineSize;
+        reserveMagazines = data.reserveMagazines;
+    }
+    public void AddSupply(int magazines)
+    {
+        if (data.infiniteReserve) return;
+
+        InitAmmo();
+        reserveMagazines = Mathf.Min(reserveMagazines + magazines, data.reserveMagazines);
+        NotifyAmmo();
+        Debug.Log($"{data.weaponName} 보급: 예비 탄창 {reserveMagazines}/{data.reserveMagazines}");
+    }
+    public void ResetAmmo()
+    {
+        ammoInitialized = true;
+        isReloading = false;
+
+        currentAmmo = data.magazineSize;
+        reserveMagazines = data.reserveMagazines;
+        NotifyAmmo();
+
+        Debug.Log($"{data.weaponName} 새 탄창 지급: {currentAmmo}/{data.magazineSize}, 예비 {reserveMagazines}");
+    }
 
     private void TryFire()
     {
@@ -49,6 +101,7 @@ s        Debug.Log($"[장착] {data.weaponName}  탄 {currentAmmo}/{data.magazin
 
         lastFireTime = Time.time;
         currentAmmo--;
+        NotifyAmmo();
 
         Fire();
 
@@ -60,6 +113,7 @@ s        Debug.Log($"[장착] {data.weaponName}  탄 {currentAmmo}/{data.magazin
         if (isReloading) return;
         if (reserveMagazines <= 0) return;
         if (currentAmmo >= data.magazineSize) return;
+        if (!data.infiniteReserve && reserveMagazines <= 0) return;
 
         StartCoroutine(ReloadRoutine());
     }
@@ -67,15 +121,19 @@ s        Debug.Log($"[장착] {data.weaponName}  탄 {currentAmmo}/{data.magazin
     private IEnumerator ReloadRoutine()
     {
         isReloading = true;
+        reloadStartTime = Time.time;
+        NotifyAmmo();
         Debug.Log("재장전 중...");
 
         yield return new WaitForSeconds(data.reloadTime);
 
         currentAmmo = data.magazineSize;
-        reserveMagazines--;
+        if (!data.infiniteReserve) reserveMagazines--;
         isReloading = false;
+        NotifyAmmo();
 
-        Debug.Log($"재장전 완료. 예비: {reserveMagazines}");
+        string reserveText = data.infiniteReserve ? "∞" : reserveMagazines.ToString();
+        Debug.Log($"탄: {currentAmmo}/{data.magazineSize}, 예비: {reserveText}");
     }
 
     protected abstract void Fire();

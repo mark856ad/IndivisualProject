@@ -1,36 +1,30 @@
-using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerAimer : MonoBehaviour
 {
-    [SerializeField] private InputActionReference _aimAction;
-    [SerializeField] private LayerMask _groundLayer;
-    [SerializeField] private Camera _mainCamera;
-    
-    public Vector3 _aimPoint {get; private set;}
+    [SerializeField] private InputActionReference lookAction;
+    [SerializeField] private LayerMask groundMask;
+    [SerializeField] private Camera mainCamera;
+
+    public Vector3 AimPoint { get; private set; }
 
     private void Update()
     {
-        Vector2 _screenPoint = _aimAction.action.ReadValue<Vector2>();
-        Ray ray = _mainCamera.ScreenPointToRay(_screenPoint);
+        Vector2 screenPos = lookAction.action.ReadValue<Vector2>();
+        Ray ray = mainCamera.ScreenPointToRay(screenPos);
 
-        if (Physics.Raycast(ray, out RaycastHit hit, 100f, _groundLayer))
+        if (Physics.Raycast(ray, out RaycastHit hit, 100f, groundMask))
         {
-            _aimPoint = hit.point;
+            AimPoint = hit.point;
         }
 
-        Vector3 direction = _aimPoint - transform.position;
+        Vector3 direction = AimPoint - transform.position;
         direction.y = 0f;
 
         if (direction.sqrMagnitude > 0.001f)
         {
-            transform.rotation = Quaternion.LookRotation(direction);    
+            transform.rotation = Quaternion.LookRotation(direction);
         }
-    }
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawSphere(_aimPoint, 0.3f);
     }
 }

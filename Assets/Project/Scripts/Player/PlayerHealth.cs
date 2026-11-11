@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 
 public class PlayerHealth : MonoBehaviour, IDamageable
 {
@@ -6,6 +7,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
     private float currentHealth;
     private bool isDead;
+    public event Action Died;
 
     private void Awake()
     {
@@ -22,7 +24,15 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         if (currentHealth <= 0f)
         {
             isDead = true;
-            Debug.Log("플레이어 사망 (임무 실패 처리는 나중에 연결)");
+            Debug.Log("플레이어 사망");
+            Died?.Invoke();
         }
+    }
+    public void Heal(float amount)
+    {
+        if (isDead) return;
+
+        currentHealth = Mathf.Min(maxHealth, currentHealth + amount);
+        Debug.Log($"플레이어 회복: HP {currentHealth}/{maxHealth}");
     }
 }

@@ -15,9 +15,10 @@ public class WeaponData : ScriptableObject
     public int pelletCount = 1;
     
     [Header("탄약")]
-    public int magazineSize = 30;       // 탄창 1개에 들어가는 탄 수
-    public int reserveMagazines = 4;    // 예비 탄창 개수
-    public float reloadTime = 2f;       // 재장전 시간(초)
+    public int magazineSize = 30;
+    public int reserveMagazines = 4;
+    public bool infiniteReserve = false;   // 추가: 켜면 예비 탄창이 줄지 않음 (권총용)
+    public float reloadTime = 2f;
 
     [Header("탄 퍼짐")]
     public float spreadAngle = 2f;      // 퍼짐 각도(도)

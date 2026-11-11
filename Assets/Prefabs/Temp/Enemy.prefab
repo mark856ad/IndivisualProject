@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 2275216570073337217}
   - component: {fileID: 5540143632199372184}
   - component: {fileID: 6304105646384300036}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -168,3 +168,6 @@ MonoBehaviour:
   repathInterval: 0.2
   exitRangeMultiplier: 1.2
   wanderSpeedRatio: 0.5
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 512

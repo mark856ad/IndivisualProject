@@ -19,5 +19,6 @@ MonoBehaviour:
   pelletCount: 1
   magazineSize: 12
   reserveMagazines: 4
+  infiniteReserve: 1
   reloadTime: 2
   spreadAngle: 2

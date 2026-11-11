@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 123603029345f1c4b802680632a6c195, type: 3}
+  m_Name: Wave Data
+  m_EditorClassIdentifier: Assembly-CSharp::WaveData
+  entries:
+  - prefab: {fileID: 2275216570073337217, guid: 7a98d27239f1e6848b60ea1d14bfe072, type: 3}
+    weight: 3
+  - prefab: {fileID: 2275216570073337217, guid: f84bd322899fc9a4caf70a936ae486c6, type: 3}
+    weight: 1
+  startInterval: 4
+  startMaxAlive: 4
+  minInterval: 1.5
+  endMaxAlive: 10
+  timeToMaxPressure: 90

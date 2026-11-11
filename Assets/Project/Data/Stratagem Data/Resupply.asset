@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: Resupply
   m_EditorClassIdentifier: Assembly-CSharp::StratagemData
   stratagemName: Resupply
-  code: 01000000010000000000000003000000
-  cooldown: 45
-  maxUses: 0
+  code: 01000000000000000000000003000000
+  cooldown: 3
+  maxUses: 1
   callDelay: 3
   beaconColor: {r: 0, g: 0, b: 1, a: 1}
+  payloadPrefab: {fileID: 3278396634512004563, guid: 2318345c4f210cd4782e56fc0ba85d2a, type: 3}
