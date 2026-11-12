@@ -19,9 +19,13 @@ public class EscapeSequence : MonoBehaviour
     [SerializeField] private float countdownSeconds = 90f;
     [SerializeField] private float boardSeconds = 20f;
     [SerializeField] private float boardRadius = 4f;
+    [SerializeField] private float landingKillRadius = 3f;
 
     public event Action MissionSucceeded;
     public event Action MissionFailed;
+    public event Action InputChanged;
+
+    private Direction[] codeDirections;
 
     private enum State { Locked, WaitingForCode, Countdown, Landed, Finished }
 
@@ -31,7 +35,14 @@ public class EscapeSequence : MonoBehaviour
     private float arrivalTime;
     private float boardDeadline;
     private int lastLoggedSecond = -1;
-
+    
+    public bool IsCountingDown => state == State.Countdown;
+    public bool IsBoarding => state == State.Landed;
+    public bool IsWaitingForCode => state == State.WaitingForCode;
+    public Direction[] Code => codeDirections;
+    public int MatchedCount => matcher == null ? 0 : matcher.Current.Count;
+    public bool PlayerInRange { get; private set; }
+    
     public float RemainingSeconds => state switch
     {
         State.Countdown => Mathf.Max(0f, arrivalTime - Time.time),
@@ -68,6 +79,8 @@ public class EscapeSequence : MonoBehaviour
 
         visual.SetActive(true);
         state = State.WaitingForCode;
+        codeDirections = escapeCode.code;
+        InputChanged?.Invoke();
 
         Debug.Log($"탈출 지점 활성화. 코드: {CodeToText(escapeCode.code)}");
     }
@@ -115,6 +128,13 @@ public class EscapeSequence : MonoBehaviour
     private void UpdateWaiting()
     {
         bool inside = (player.position - transform.position).sqrMagnitude <= radius * radius;
+
+        if (inside != PlayerInRange)
+        {
+            PlayerInRange = inside;
+            InputChanged?.Invoke();
+        }
+
         stratagemInput.enabled = !inside;
         if (!inside) return;
 
@@ -140,6 +160,7 @@ public class EscapeSequence : MonoBehaviour
                 Debug.Log("탈출 코드 틀림, 처음부터");
                 break;
         }
+        InputChanged?.Invoke();
     }
 
     private void StartCountdown()
@@ -173,6 +194,11 @@ public class EscapeSequence : MonoBehaviour
     private void Land()
     {
         state = State.Landed;
+        int killed = DropImpact.Strike(shuttle.transform.position, landingKillRadius);
+        if (killed > 0)
+        {
+            Debug.Log($"탈출선 착륙 충격: {killed}명 사망 (아군/적군 구분 없음)");
+        }
         boardDeadline = Time.time + boardSeconds;
         shuttle.SetActive(true);
 
@@ -217,6 +243,7 @@ public class EscapeSequence : MonoBehaviour
         if (mode == InputMode.Normal)
         {
             matcher?.Reset();
+            InputChanged?.Invoke();
         }
     }
 }

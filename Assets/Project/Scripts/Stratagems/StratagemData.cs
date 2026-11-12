@@ -10,4 +10,6 @@ public class StratagemData : ScriptableObject
     public float callDelay = 3f;     // 비컨 착지 후 지원이 떨어지기까지의 시간
     public Color beaconColor = Color.blue;
     public StratagemPayload payloadPrefab;   // 지원 효과 프리팹
+    [Header("투하 충격")]
+    public float impactRadius = 2.5f;
 }

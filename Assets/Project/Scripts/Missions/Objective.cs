@@ -9,6 +9,8 @@ public abstract class Objective : MonoBehaviour
     public bool IsCompleted { get; private set; }
 
     public event Action<Objective> ProgressChanged;
+    public virtual string ProgressText => $"{Mathf.RoundToInt(Progress * 100f)}%";
+    public virtual string Hint => "";
     public event Action<Objective> Completed;
 
     protected void NotifyProgress()

@@ -9,6 +9,8 @@ public class ObjectiveManager : MonoBehaviour
     public event Action AllCompleted;
 
     private int completedCount;
+    
+    public Objective[] Objectives => objectives;
 
     private void OnEnable()
     {

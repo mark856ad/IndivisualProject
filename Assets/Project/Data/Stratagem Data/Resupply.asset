@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Resupply
   m_EditorClassIdentifier: Assembly-CSharp::StratagemData
   stratagemName: Resupply
-  code: 01000000000000000000000003000000
+  code: 01000000010000000000000003000000
   cooldown: 3
   maxUses: 1
   callDelay: 3

@@ -34,4 +34,11 @@ public class Enemy : MonoBehaviour, IDamageable
         isDead = true;
         Died?.Invoke(this);
     }
+    public void Kill()
+    {
+        if (isDead) return;
+
+        currentHealth = 0f;
+        Die();
+    }
 }

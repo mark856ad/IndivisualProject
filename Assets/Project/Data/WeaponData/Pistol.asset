@@ -22,3 +22,4 @@ MonoBehaviour:
   infiniteReserve: 1
   reloadTime: 2
   spreadAngle: 2
+  fireSound: {fileID: 8300000, guid: 2df05e44cd8b5484eb39f3a08b840afe, type: 3}

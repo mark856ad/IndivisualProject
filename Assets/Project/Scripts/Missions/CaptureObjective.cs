@@ -11,7 +11,7 @@ public class CaptureObjective : Objective
 
     public bool IsContested { get; private set; }
     public bool PlayerInside { get; private set; }
-
+    public override string Hint => (PlayerInside && IsContested && !IsCompleted) ? "CLEAR AREA" : "";
     public override string Title => "CAPTURE THE AREA";
     public override float Progress => progress;
     private bool lastPlayerInside;

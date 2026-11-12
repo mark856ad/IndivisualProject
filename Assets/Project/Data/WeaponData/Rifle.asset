@@ -16,7 +16,10 @@ MonoBehaviour:
   damage: 5
   fireInterval: 0.1
   range: 30
+  pelletCount: 1
   magazineSize: 30
   reserveMagazines: 3
+  infiniteReserve: 0
   reloadTime: 2
   spreadAngle: 2
+  fireSound: {fileID: 8300000, guid: 135ecbd79106ce54c95188ce2966b7e0, type: 3}

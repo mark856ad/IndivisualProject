@@ -104,7 +104,7 @@ public abstract class Weapon : MonoBehaviour
         NotifyAmmo();
 
         Fire();
-
+        SfxPlayer.Play(data.fireSound);
         Debug.Log($"탄: {currentAmmo}/{data.magazineSize}, 예비: {reserveMagazines}");
     }
 

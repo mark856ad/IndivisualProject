@@ -22,4 +22,7 @@ public class WeaponData : ScriptableObject
 
     [Header("탄 퍼짐")]
     public float spreadAngle = 2f;      // 퍼짐 각도(도)
+    
+    [Header("사운드")]
+    public AudioClip fireSound;
 }

@@ -9,7 +9,8 @@ public class MissionStats : MonoBehaviour
     public int KillCount { get; private set; }
     public int StratagemUses { get; private set; }
     public float ElapsedSeconds { get; private set; }
-
+    public event System.Action<bool> StatsReady;
+    public bool Success { get; private set; }
     private float startTime;
     private bool running;
 
@@ -52,7 +53,9 @@ public class MissionStats : MonoBehaviour
     {
         running = false;
         ElapsedSeconds = Time.time - startTime;
+        Success = success;
 
         Debug.Log($"결과: {(success ? "성공" : "실패")}, 시간 {ElapsedSeconds:F0}초, 처치 {KillCount}, 스트라타잼 {StratagemUses}회");
+        StatsReady?.Invoke(success);
     }
 }

@@ -11,6 +11,7 @@ public class KillObjective : Objective
     public override float Progress => Mathf.Clamp01((float)killCount / targetCount);
     public int KillCount => killCount;
     public int TargetCount => targetCount;
+    public override string ProgressText => $"{killCount}/{targetCount}";
 
     private void OnEnable()
     {
