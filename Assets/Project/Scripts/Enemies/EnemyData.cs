@@ -18,4 +18,6 @@ public class EnemyData : ScriptableObject
     public float retreatStep = 4f;        // 물러날 때 한 번에 정하는 거리
     public float viewAngle = 120f;   // 시야각(도). 정면 기준 좌우로 절반씩
     public float loseSightTime = 3f;   // 플레이어를 놓친 뒤 추격을 포기하기까지의 시간(초)
+    [Header("원거리 공격")]
+    public Bullet projectilePrefab;    // 비어 있으면 지금처럼 즉시 피해 (근접형)
 }

@@ -20,6 +20,9 @@ public class EscapeSequence : MonoBehaviour
     [SerializeField] private float boardSeconds = 20f;
     [SerializeField] private float boardRadius = 4f;
     [SerializeField] private float landingKillRadius = 3f;
+    [SerializeField] private DropWarning warningPrefab;
+    [SerializeField] private float warningSeconds = 8f;
+    private bool warningShown;
 
     public event Action MissionSucceeded;
     public event Action MissionFailed;
@@ -170,6 +173,7 @@ public class EscapeSequence : MonoBehaviour
         stratagemInput.enabled = true;
 
         if (spawner != null) spawner.SetMissionPressure(1f);
+        spawner.SetRallyPoint(transform.position);
 
         Debug.Log($"탈출선 호출! {countdownSeconds:F0}초 뒤 도착");
     }
@@ -177,6 +181,16 @@ public class EscapeSequence : MonoBehaviour
     private void UpdateCountdown()
     {
         float remaining = arrivalTime - Time.time;
+        if (!warningShown && remaining <= warningSeconds)
+        {
+            warningShown = true;
+
+            Vector3 center = shuttle.transform.position;
+            center.y = transform.position.y;
+
+            DropWarning.Spawn(warningPrefab, center, landingKillRadius, remaining);
+            Debug.Log($"탈출선 착륙 경고: 반경 {landingKillRadius}");
+        }
 
         int second = Mathf.CeilToInt(remaining);
         if (second != lastLoggedSecond && second % 10 == 0)

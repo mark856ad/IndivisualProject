@@ -7,4 +7,6 @@ public abstract class StratagemPayload : MonoBehaviour
     public float Lifetime => lifetime;
 
     public abstract void Activate(Vector3 position);
+    
+    public virtual float DangerRadius => 0f;
 }

@@ -7,6 +7,9 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private WaveData wave;
     [SerializeField] private Transform[] spawnPoints;
     [SerializeField] private int prewarmPerType = 5;
+    private readonly HashSet<Enemy> alive = new HashSet<Enemy>();
+    private bool rallyActive;
+    private Vector3 rallyPoint;
 
     public event System.Action<Enemy> EnemyKilled;
     public float Pressure { get; private set; }
@@ -74,6 +77,12 @@ private float missionPressure;
 
         Enemy enemy = pool.Get(hit.position, Quaternion.identity);
         poolOfInstance[enemy] = pool;
+        alive.Add(enemy);
+
+        if (rallyActive && enemy.TryGetComponent(out EnemyAI ai))
+        {
+            ai.SetRallyPoint(rallyPoint);
+        }
         enemy.Died += OnEnemyDied;
         aliveCount++;
     }
@@ -97,6 +106,7 @@ private float missionPressure;
     private void OnEnemyDied(Enemy enemy)
     {
         enemy.Died -= OnEnemyDied;
+        alive.Remove(enemy);
         poolOfInstance[enemy].Release(enemy);
         aliveCount--;
 
@@ -105,5 +115,25 @@ private float missionPressure;
     public void SetMissionPressure(float value)
     {
         missionPressure = Mathf.Clamp01(value);
+    }
+    public void SetRallyPoint(Vector3 point)
+    {
+        if (NavMesh.SamplePosition(point, out NavMeshHit hit, 5f, NavMesh.AllAreas))
+        {
+            point = hit.position;
+        }
+
+        rallyActive = true;
+        rallyPoint = point;
+
+        foreach (Enemy enemy in alive)
+        {
+            if (enemy.TryGetComponent(out EnemyAI ai))
+            {
+                ai.SetRallyPoint(rallyPoint);
+            }
+        }
+
+        Debug.Log($"집결 지점 설정: 살아 있는 적 {alive.Count}마리");
     }
 }

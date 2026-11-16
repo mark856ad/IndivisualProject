@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Wave Data 1
   m_EditorClassIdentifier: Assembly-CSharp::WaveData
   entries:
-  - prefab: {fileID: 2275216570073337217, guid: 7a98d27239f1e6848b60ea1d14bfe072, type: 3}
+  - prefab: {fileID: 2275216570073337217, guid: f84bd322899fc9a4caf70a936ae486c6, type: 3}
     weight: 1
   startInterval: 5
   startMaxAlive: 2

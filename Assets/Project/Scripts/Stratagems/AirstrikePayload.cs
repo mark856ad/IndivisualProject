@@ -5,7 +5,8 @@ public class AirstrikePayload : StratagemPayload
     [SerializeField] private float radius = 8f;
     [SerializeField] private float damage = 100f;
     [SerializeField] private LayerMask damageMask = ~0;
-
+    
+    public override float DangerRadius => radius;
     public override void Activate(Vector3 position)
     {
         Collider[] hits = Physics.OverlapSphere(position, radius, damageMask);

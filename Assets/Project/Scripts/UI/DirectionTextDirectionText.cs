@@ -20,6 +20,18 @@ public static class DirectionText
         }
         return text;
     }
+    public static int MatchedPrefixCount(System.Collections.Generic.IReadOnlyList<Direction> input, Direction[] code)
+    {
+        if (input.Count == 0 || input.Count > code.Length) return 0;
+
+        for (int i = 0; i < input.Count; i++)
+        {
+            if (input[i] != code[i]) return 0;
+        }
+
+        return input.Count;
+    }
+    
 
     private static string ToArrow(Direction d)
     {

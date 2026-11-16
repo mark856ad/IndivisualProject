@@ -11,6 +11,7 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] private float exitRangeMultiplier = 1.2f;
     [SerializeField] private float wanderSpeedRatio = 0.5f;
     [SerializeField] private LayerMask obstacleMask;
+    private SimplePool<Bullet> projectilePool;
     private float lastSeenTime;
     private Vector3 lastKnownPosition;
     private NavMeshAgent agent;
@@ -20,6 +21,7 @@ public class EnemyAI : MonoBehaviour
     private float lastRepathTime;
     private bool isWaiting;
     private float wanderResumeTime;
+    private bool rallying;
     
     private IDamageable targetDamageable;
     private float lastAttackTime = -999f;
@@ -32,9 +34,15 @@ public class EnemyAI : MonoBehaviour
     private void OnEnable()
     {
         lastAttackTime = -999f;
+        rallying = false;
         homePosition = transform.position;
         target = GameObject.FindWithTag("Player").transform;
         target.TryGetComponent(out targetDamageable);
+        if (data.projectilePrefab != null && projectilePool == null)
+        {
+            projectilePool = new SimplePool<Bullet>(
+                data.projectilePrefab, 6, $"{data.enemyName} Projectiles");
+        }
         ChangeState(State.Wander);
     }
 
@@ -156,11 +164,7 @@ public class EnemyAI : MonoBehaviour
         if (Time.time - lastAttackTime >= data.attackInterval)
         {
             lastAttackTime = Time.time;
-
-            if (targetDamageable != null)
-            {
-                targetDamageable.TakeDamage(data.attackDamage);
-            }
+            PerformAttack();
         }
     }
 
@@ -175,7 +179,7 @@ public class EnemyAI : MonoBehaviour
         Debug.Log($"{data.enemyName} 상태: {state}");
 
         agent.isStopped = (state == State.Attack);
-        agent.speed = data.moveSpeed * (state == State.Wander ? wanderSpeedRatio : 1f);
+        agent.speed = data.moveSpeed * ((state == State.Wander && !rallying) ? wanderSpeedRatio : 1f);
 
         if (state == State.Wander)
         {
@@ -234,4 +238,45 @@ public class EnemyAI : MonoBehaviour
         Gizmos.DrawLine(transform.position, transform.position + left);
         Gizmos.DrawLine(transform.position, transform.position + right);
     }
+    private void PerformAttack()
+    {
+        if (data.projectilePrefab != null)
+        {
+            FireProjectile();
+            return;
+        }
+
+        if (targetDamageable != null)
+        {
+            targetDamageable.TakeDamage(data.attackDamage);
+        }
+    }
+
+    private void FireProjectile()
+    {
+        Vector3 muzzle = transform.position + Vector3.up * 1f;
+
+        Vector3 direction = target.position - muzzle;
+        direction.y = 0f;
+
+        if (direction.sqrMagnitude < 0.001f) return;
+
+        Bullet bullet = projectilePool.Get(muzzle, Quaternion.LookRotation(direction));
+        bullet.Pool = projectilePool;
+        bullet.Damage = data.attackDamage;
+        bullet.Owner = BulletTeam.Enemy;
+    }
+    public void SetRallyPoint(Vector3 point)
+    {
+        rallying = true;
+        homePosition = point;
+        agent.speed = data.moveSpeed;
+
+        if (state == State.Wander && agent.isOnNavMesh)
+        {
+            isWaiting = false;
+            agent.isStopped = false;
+            agent.SetDestination(point);
+        }
+    }   
 }
