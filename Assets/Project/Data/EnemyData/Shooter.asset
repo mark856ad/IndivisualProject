@@ -27,4 +27,4 @@ MonoBehaviour:
   retreatStep: 4
   viewAngle: 90
   loseSightTime: 3
-  projectilePrefab: {fileID: -7098462897529394408, guid: f040ed5bb323381489b25ccfd9859174, type: 3}
+  projectilePrefab: {fileID: -7098462897529394408, guid: 6d7bdbf3a1169fa408b2ce397d9969ca, type: 3}
