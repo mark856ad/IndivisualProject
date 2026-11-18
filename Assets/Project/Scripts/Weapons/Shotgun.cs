@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Shotgun : Weapon   
+public class Shotgun : Weapon 
 {
     protected override void Fire()
     {
