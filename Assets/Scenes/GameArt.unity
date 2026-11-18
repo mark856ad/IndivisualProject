@@ -3109,6 +3109,7 @@ GameObject:
   - component: {fileID: 147261295}
   - component: {fileID: 147261294}
   - component: {fileID: 147261308}
+  - component: {fileID: 147261309}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -3197,7 +3198,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4fed0097729fb5428e05aa0b87260c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMover
-  _moveSpeed: 5
+  _moveSpeed: 6
   _moveAction: {fileID: 6638084549941837573, guid: 3416821d7ac6b3d4a8af3515f1e935e4, type: 3}
 --- !u!114 &147261299
 MonoBehaviour:
@@ -3410,6 +3411,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ced5670495d320448818660f29f4a146, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimator
+  animator: {fileID: 0}
+  dampTime: 0.1
+--- !u!114 &147261309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 147261293}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1aade19d471818c4690c6d86ee83a689, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimator
+  animator: {fileID: 2139898648}
+  dampTime: 0.1
 --- !u!4 &149179196 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4331393723964370, guid: e9973a8386e637945b83ec278dd7f3dc, type: 3}
@@ -52501,6 +52518,11 @@ Transform:
 --- !u!4 &2139898647 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4655052210597358, guid: 4493b9786df76d64fad99c1e9ac91ace, type: 3}
+  m_PrefabInstance: {fileID: 40809417}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &2139898648 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 95497033138367770, guid: 4493b9786df76d64fad99c1e9ac91ace, type: 3}
   m_PrefabInstance: {fileID: 40809417}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &2140493788 stripped
