@@ -56,7 +56,7 @@ GameObject:
   - component: {fileID: 33230950053493826}
   - component: {fileID: 23806272182395238}
   m_Layer: 0
-  m_Name: SM_Wep_Rifle_Base_01
+  m_Name: RifleModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

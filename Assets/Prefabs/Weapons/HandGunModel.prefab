@@ -56,7 +56,7 @@ GameObject:
   - component: {fileID: 33814061027792044}
   - component: {fileID: 23612036613695694}
   m_Layer: 0
-  m_Name: SM_Wep_Pistol_01
+  m_Name: HandGunModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -4,8 +4,11 @@ public class PlayerAnimator : MonoBehaviour
 {
     [SerializeField] private Animator animator;
     [SerializeField] private float dampTime = 0.1f;
+    [SerializeField] private float MaxSpeed = 6f;
 
     private static readonly int SpeedHash = Animator.StringToHash("Speed");
+    private static readonly int movexHash = Animator.StringToHash("MoveX");
+    private static readonly int movezHash = Animator.StringToHash("MoveZ");
 
     private Rigidbody _rb;
 
@@ -29,7 +32,10 @@ public class PlayerAnimator : MonoBehaviour
     {
         Vector3 velocity = _rb.linearVelocity;
         velocity.y = 0f;
+        
+        Vector3 local = transform.InverseTransformDirection(velocity) / MaxSpeed;
 
-        animator.SetFloat(SpeedHash, velocity.magnitude, dampTime, Time.deltaTime);
+        animator.SetFloat(movexHash, local.x, dampTime, Time.deltaTime);
+        animator.SetFloat(movezHash, local.z, dampTime, Time.deltaTime);
     }
 }
