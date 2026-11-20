@@ -12,7 +12,7 @@ public class Shotgun : Weapon
         for (int i = 0; i < count; i++)
         {
             float angle = count > 1 ? startAngle + step * i : 0f;
-            Quaternion rotation = muzzle.rotation * Quaternion.Euler(0f, angle, 0f);
+            Quaternion rotation = AimRotation * Quaternion.Euler(0f, angle, 0f);
 
             SpawnBullet(rotation);
         }

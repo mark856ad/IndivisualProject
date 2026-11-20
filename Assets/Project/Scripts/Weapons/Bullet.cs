@@ -29,6 +29,14 @@ public class Bullet : MonoBehaviour
         }
     }
 
+    private void LotateBullet(Bullet bullet)
+    {
+        if (bullet.Owner == Owner)
+        {
+            
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.isTrigger) return;

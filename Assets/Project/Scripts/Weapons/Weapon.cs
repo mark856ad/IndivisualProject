@@ -17,7 +17,20 @@ public abstract class Weapon : MonoBehaviour
     private bool ammoInitialized;
     private float reloadStartTime;
     protected SimplePool<Bullet> bulletPool;
-    
+
+    protected Quaternion AimRotation
+    {
+        get
+        {
+            Vector3 forward = muzzle.forward;
+            forward.y = 0f;
+
+            if (forward.sqrMagnitude < 0.001f) forward = transform.forward;
+
+            return Quaternion.LookRotation(forward.normalized);
+        }
+    }
+
     public event System.Action<Weapon> AmmoChanged;
     
     public string WeaponName => data.weaponName;
@@ -29,6 +42,7 @@ public abstract class Weapon : MonoBehaviour
     public float ReloadTime => data.reloadTime;
     public float ReloadProgress =>
         isReloading ? Mathf.Clamp01((Time.time - reloadStartTime) / data.reloadTime) : 0f;
+    public event System.Action Fired;
 
     private void NotifyAmmo()
     {
@@ -104,6 +118,7 @@ public abstract class Weapon : MonoBehaviour
         NotifyAmmo();
 
         Fire();
+        Fired?.Invoke();
         SfxPlayer.Play(data.fireSound);
         Debug.Log($"탄: {currentAmmo}/{data.magazineSize}, 예비: {reserveMagazines}");
     }
