@@ -15,8 +15,6 @@ MonoBehaviour:
   entries:
   - prefab: {fileID: 2275216570073337217, guid: 7a98d27239f1e6848b60ea1d14bfe072, type: 3}
     weight: 3
-  - prefab: {fileID: 2275216570073337217, guid: f84bd322899fc9a4caf70a936ae486c6, type: 3}
-    weight: 1
   startInterval: 4
   startMaxAlive: 4
   minInterval: 1.5

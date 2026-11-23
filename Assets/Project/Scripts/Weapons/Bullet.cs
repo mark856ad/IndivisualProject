@@ -17,6 +17,7 @@ public class Bullet : MonoBehaviour
     {
         spawnTime = Time.time;
         Owner = BulletTeam.Player;
+        Debug.Log($"[Bullet] 발사 방향 {transform.forward}, 회전 {transform.eulerAngles}");
     }
 
     private void Update()
@@ -29,16 +30,9 @@ public class Bullet : MonoBehaviour
         }
     }
 
-    private void LotateBullet(Bullet bullet)
-    {
-        if (bullet.Owner == Owner)
-        {
-            
-        }
-    }
-
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log($"[Bullet] 닿음: {other.name} (트리거 {other.isTrigger}, 태그 {other.tag})");
         if (other.isTrigger) return;
 
         BulletTeam hitTeam = GetTeam(other);
