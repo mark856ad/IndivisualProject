@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca2b5c2e658faaf4eb508eef0d683bcd, type: 3}
+  m_Name: Airstrike
+  m_EditorClassIdentifier: Assembly-CSharp::StratagemData
+  stratagemName: Airstrike
+  code: 03000000000000000300000001000000
+  cooldown: 10
+  maxUses: 0
+  callDelay: 3
+  beaconColor: {r: 1, g: 0, b: 0, a: 1}
+  payloadPrefab: {fileID: 6920839806277209433, guid: f3cac53f99e04c24fbde633f22b0569c, type: 3}
