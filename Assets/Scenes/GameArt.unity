@@ -2434,7 +2434,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 147261293}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a845b56ff9b97fa4794666ea20395411, type: 3}
   m_Name: 
@@ -2455,7 +2455,7 @@ MonoBehaviour:
   modeController: {fileID: 147261303}
   aimer: {fileID: 147261299}
   inventory: {fileID: 147261296}
-  beaconPrefab: {fileID: -918899864213802256, guid: c22dafdcf1ca7514d96c11709f2a1e46, type: 3}
+  beaconPrefab: {fileID: 4255781093914551032, guid: 8e4941b4c14328f43ac806b0acbc7254, type: 3}
   throwAction: {fileID: 4142214406950910352, guid: 3416821d7ac6b3d4a8af3515f1e935e4, type: 3}
   cancelAction: {fileID: -2009384023319136585, guid: 3416821d7ac6b3d4a8af3515f1e935e4, type: 3}
   flightTime: 0.8
@@ -2673,7 +2673,7 @@ Transform:
   m_GameObject: {fileID: 147261293}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 39.04, y: 1, z: 214.22}
+  m_LocalPosition: {x: 39.04, y: 0.91, z: 217.54}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

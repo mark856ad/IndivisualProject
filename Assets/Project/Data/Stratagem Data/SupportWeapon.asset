@@ -18,5 +18,5 @@ MonoBehaviour:
   maxUses: 1
   callDelay: 3
   beaconColor: {r: 0.05164588, g: 0.9716981, b: 0.041251317, a: 1}
-  payloadPrefab: {fileID: 3558416713842056510, guid: f6ad39235a7acb148b80392cb34aceaa, type: 3}
+  payloadPrefab: {fileID: 3170421865995201752, guid: 2398398009cd3134e99d728baf4aa18f, type: 3}
   impactRadius: 2.5
