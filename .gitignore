@@ -73,3 +73,9 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+# 예) 캐릭터, 환경, 총 모델
+/Assets/PostApocalypseGuns/
+/Assets/PostApocalypseGuns.meta
+/Assets/Art/
+/Assets/Art.meta
